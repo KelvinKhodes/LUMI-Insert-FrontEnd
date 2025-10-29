@@ -12,11 +12,31 @@
     refund: '1',
   }
 
+  let announces = [
+    {
+      title: 'Memo Gudang',
+      message: 'Tolong nanti kalau ada pak ilham, diambil barangnya ya',
+      sender: 'Ko Aliong',
+    },
+    {
+      title: 'Memo Akuntan',
+      message: 'Jangan lupa pajak sudah turun ya',
+      sender: 'Ci Sana',
+    },
+    {
+      title: 'Memo Internal',
+      message: 'Besok masuk lebih awal 10 menit ya',
+      sender: 'Pak Sudi',
+    }
+  ];
+
+  let whoOpenId = $state('');
+
   let weeklyOrder = [12126, 11235, 9632, 9852, 10120, 10000, 12332]
 
   let options: ApexOptions = {
     chart: {
-      height: 150,
+      height: 200,
       type: "area",
       fontFamily: "Inter, sans-serif",
       dropShadow: {
@@ -40,7 +60,6 @@
       }
     ]
   };
- let defaultModal = $state(false);
 </script>
 
 <head><title>Insert Dashboard</title></head>
@@ -61,20 +80,32 @@
 
   <div class="grid grid-cols-2 grid-rows-4 gap-4 w-[70%] p-2">
     <div class="col-span-2 row-span-2">
-      <Card class="p-2 md:p-4 max-w-none! bg-linear-to-tr from-indigo-400/30 via-gray-700/20 to-orange-700/30 backdrop-blur-[6.1px] border border-white/30">
+      <Card class="p-2 md:p-4 max-w-none! bg-linear-to-br from-indigo-400/70 via-gray-700/60 to-orange-700/60  backdrop-blur-[6.1px] border border-white/30">
         <Chart class="w-full " bind:options />
       </Card>
     </div>
     <div class="row-span-2 row-start-3">
-      <Card class="p-2 md:p-4 max-w-none! bg-linear-to-tr from-indigo-400/30 via-gray-700/20 to-orange-700/30 backdrop-blur-[6.1px] border border-white/30">
-        <Button onclick={() => (defaultModal = true)}>Default modal</Button>
-        <Modal title="Terms of Service" form bind:open={defaultModal}>
-          <P>With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.</P>
-          <P>
-            The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to
-            notify users as soon as possible of high-risk data breaches that could personally affect them.
-          </P>
+      <Card class="p-2 md:p-4 max-w-none! bg-linear-to-br from-indigo-400/70 via-gray-700/60 to-orange-700/60 backdrop-blur-[6.1px] border border-white/30">
+        <span>Role Memo</span>
+        {#each announces as announce}
+          <Button class="cursor-pointer !bg-gray-300/30 !bg-linear-to-r from-indigo-800/40 via-gray-700/30 to-orange-700/30 backdrop-blur-[6.1px] hover:brightness-90 border border-gray-800/40 m-1" onclick={() => (whoOpenId = announce.title)}>{announce.title}</Button>
+          <Modal title={announce.title} open={whoOpenId === announce.title}>
+          <P>{announce.message}</P>
+          <P>{announce.sender}</P>
         </Modal>
+        {/each }
+      </Card>
+    </div>
+    <div class="row-span-2 row-start-3">
+      <Card class="p-2 md:p-4 max-w-none! bg-linear-to-bl from-indigo-400/70 via-gray-700/60 to-orange-700/60  backdrop-blur-[6.1px] border border-white/30">
+        <span>General Memo</span>
+        {#each announces as announce}
+          <Button class="cursor-pointer !bg-gray-300/30 !bg-linear-to-l from-indigo-800/40 via-gray-700/30 to-orange-700/30 backdrop-blur-[6.1px] hover:brightness-90 border border-gray-800/40 m-1" onclick={() => (whoOpenId = announce.title)}>{announce.title}</Button>
+          <Modal title={announce.title} open={whoOpenId === announce.title}>
+          <P>{announce.message}</P>
+          <P>{announce.sender}</P>
+        </Modal>
+        {/each }
       </Card>
     </div>
   </div>

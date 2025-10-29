@@ -72,10 +72,10 @@
         {#snippet icon()}
           <UserSettingsOutline class="h-4 w-4 text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
-        <SidebarItem label="New Staff" href="/products/new" aClass="!ms-2 !p-1" spanClass="text-xs"/>
-        <SidebarItem label="Staff Management" href="/products/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
-        <SidebarItem label="Staff Logs" href="/products/stock" aClass="!ms-2 !p-1" spanClass="text-xs"/>
-				<SidebarItem label="Dashboard Management" href="/products/stock" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+        <SidebarItem label="New Staff" href="/staffs/new" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+        <SidebarItem label="Staff Management" href="/staffs/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+        <SidebarItem label="Staff Logs" href="/staffs/logs" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+				<SidebarItem label="Dashboard Management" href="/staffs/dashboard" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
 
     </SidebarGroup>
