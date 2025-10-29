@@ -65,7 +65,7 @@
       </div>
       <form action="POST" onsubmit={loginHandler} class="h-full flex-1 w-0 flex flex-col gap-3 rounded-2xl">
         <img src={logo} class=" w-25 self-center-safe" alt="Lumi Insert - Illuminate your bussiness">
-        <Heading tag="h1" class="font-bold  md:text-xl lg:text-2xl text-white">Good {day}, friend...</Heading>
+        <Heading tag="h1" class="font-bold  md:text-xl lg:text-xl text-white">Good {day}, friend...</Heading>
         <FloatingLabelInput classes={{input:"text-gray-200 cursor-text", label:"bg-gray-800 text-gray-400 cursor-text"}} variant="outlined" id="login_username" name="login_username" bind:value={loginForm.username} color="sky" type="text" required>
           Your username here...
         </FloatingLabelInput>
