@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { editCustomerAPI, getCustomerAPI, getInactiveCustomerAPI } from "$lib/api/customerAPI";
 	import type { getCustomerDataType } from "$lib/type/customerType";
+	import { redirect } from "@sveltejs/kit";
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder } from "flowbite-svelte";
-	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, ThumbsUpSolid, ThumbsDownSolid, EyeSlashSolid, EyeSolid } from "flowbite-svelte-icons";
+	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, UserSolid, EyeSlashSolid, EyeSolid, EyeOutline } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";
   
   let customerList: getCustomerDataType[] = $state([]);
@@ -124,11 +126,14 @@ async function customerEditingHandler() {
         <TableBodyCell>{customer.customer_address}</TableBodyCell>
         <TableBodyCell>
           {#if customer.customer_status === "ACTIVE"}
-            <ThumbsUpSolid class="text-green-800 w-3 h-3"/>
-          {:else} <ThumbsDownSolid class="text-red-800 w-3 h-3"/>
+            <UserSolid class="text-green-800 w-3 h-3"/>
+          {:else} <UserSolid class="text-red-800 w-3 h-3"/>
           {/if}
         </TableBodyCell>
         <TableBodyCell>
+          <Button pill={true} outline={false} class="p-2! bg-transparent!" href="/customers/{customer.customer_id}/view" size="xl">
+            <EyeOutline class="w-3 h-3 text-blue-500 cursor-pointer"/>
+          </Button>
           <Button pill={true} outline={false} class="p-2! bg-transparent!" onclick={() => editBtn(customer)} size="xl">
             <UserEditOutline class="w-3 h-3 text-blue-500 cursor-pointer"/>
           </Button>
