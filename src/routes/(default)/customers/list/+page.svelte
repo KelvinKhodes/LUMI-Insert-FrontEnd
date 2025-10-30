@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import { editCustomerAPI, getCustomerAPI, getInactiveCustomerAPI } from "$lib/api/customerAPI";
 	import type { getCustomerDataType } from "$lib/type/customerType";
-	import { redirect } from "@sveltejs/kit";
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder } from "flowbite-svelte";
 	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, UserSolid, EyeSlashSolid, EyeSolid, EyeOutline } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";

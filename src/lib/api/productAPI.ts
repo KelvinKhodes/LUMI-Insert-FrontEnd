@@ -23,18 +23,15 @@ export async function getProductAPI(){
 };
 
 
-// export async function editProductAPI(customer: getCustomerDataType){
-//   return fetch(`/api/customers/${customer.customer_id}`, {
-//     method: 'PUT',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       customer_name: customer.customer_name,
-//       customer_contact: customer.customer_contact,
-//       customer_address: customer.customer_address,
-//       customer_status: customer.customer_status
-//     })
-//   });
-// };
+export async function editProductAPI(product: registerProductForm){
+  return fetch(`/api/products/${product.product_id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      ...product
+    })
+  });
+};
