@@ -1,0 +1,44 @@
+import type { getCustomerDataType, registerCustomerForm } from "$lib/type/customerType";
+
+export async function registerCustomerAPI(customerRegister: registerCustomerForm){
+  return fetch(`/api/customers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      customer_name: customerRegister.name,
+      customer_contact: customerRegister.contact,
+      customer_address: customerRegister.address
+    })
+  })
+}
+
+export async function getCustomerAPI(){
+  return fetch(`/api/customers`, {
+    method: 'GET',
+  });
+};
+
+export async function getInactiveCustomerAPI(){
+  return fetch(`/api/customers/inactive`, {
+    method: 'GET',
+  });
+};
+
+export async function editCustomerAPI(customer: getCustomerDataType){
+  return fetch(`/api/customers/${customer.customer_id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      customer_name: customer.customer_name,
+      customer_contact: customer.customer_contact,
+      customer_address: customer.customer_address,
+      customer_status: customer.customer_status
+    })
+  });
+};

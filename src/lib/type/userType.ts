@@ -8,3 +8,10 @@ export type registerStaffForm = {
   password: string,
   fullname: string,
 };
+
+export type getStaffDataType = {
+  id: string,
+  username: string,
+  role: string,
+  fullname: string,
+}

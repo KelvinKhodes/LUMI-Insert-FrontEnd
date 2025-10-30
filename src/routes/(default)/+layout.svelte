@@ -29,7 +29,7 @@
 
 <SidebarButton onclick={demoSidebarUi.toggle} class="mb-2" />
 <div class="relative">
-  <Sidebar isSingle={true} {activeUrl} backdrop={false} isOpen={isDemoOpen} closeSidebar={closeDemoSidebar} params={{ x: -50, duration: 50 }} position="absolute" classes={{ nonactive: "group p-2 hover:bg-[rgb(88,101,129)] [&>span]:text-gray-300", active: "p-2 hover:bg-[rgb(88,101,129)] bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200", div: "bg-transparent" }} class="z-50 h-dvh w-[17vw] bg-linear-to-br from-gray-950 via-gray-900 to-gray-950 ">
+  <Sidebar isSingle={true} {activeUrl} backdrop={false} isOpen={isDemoOpen} closeSidebar={closeDemoSidebar} params={{ x: -50, duration: 50 }} position="absolute" classes={{ nonactive: "group p-2 hover:bg-[rgb(88,101,129)] [&>span]:text-gray-400", active: "p-2 hover:bg-[rgb(88,101,129)] bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200", div: "bg-transparent" }} class="z-50 h-dvh w-[17vw] bg-linear-to-br from-gray-950 via-gray-900 to-gray-950 ">
     <NavBrand href="/">
     <img src={logo} class="me-3 pr-4 h-6 sm:h-9 border-r md:dark drop-shadow-[0_5px_15px_rgba(0,0,0,0.4)]" alt="Lumi Logo" />
     <img src={insertLogo} class="h-6 sm:h-9 drop-shadow-[0_5px_15px_rgba(0,0,0,0.4)]" alt="Insert Logo" />
@@ -42,7 +42,7 @@
         {/snippet}
       </SidebarItem>
 
-      <SidebarDropdownWrapper label="Transaction" svgClass="text-gray-400 transition duration-75 hover:text-gray-300 h-2 w-2" btnClass="p-1 hover:bg-[rgb(65,79,110)] hover:[&>span]:text-gray-300 {trIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={trIsOpen} spanClass="text-base text-gray-400 !ms-1 !me-2" ulClass="py-1">
+      <SidebarDropdownWrapper label="Transaction" svgClass="text-gray-400 transition duration-75 hover:text-gray-300 h-2 w-2" btnClass="cursor-pointer p-1 hover:bg-[rgb(65,79,110)] hover:[&>span]:text-gray-300 {trIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={trIsOpen} spanClass="text-base text-gray-400 !ms-1 !me-2" ulClass="py-1">
         {#snippet icon()}
           <CartPlusOutline class="h-4 w-4 text-x text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
@@ -51,7 +51,7 @@
         <SidebarItem label="Performance" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
 
-      <SidebarDropdownWrapper label="Customer" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="p-1 hover:bg-[rgb(65,79,110)] has-[>span.active]:bg-yellow-500 {customerIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={customerIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
+      <SidebarDropdownWrapper label="Customer" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="cursor-pointer p-1 hover:bg-[rgb(65,79,110)] has-[>span.active]:bg-yellow-500 {customerIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={customerIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
         {#snippet icon()}
           <UsersGroupOutline class="h-4 w-4 text-gray-400 transition duration-75  group-hover:text-gray-300 mr-1" />
         {/snippet}
@@ -59,7 +59,7 @@
         <SidebarItem label="Customer Management" href="/customers/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
 
-			<SidebarDropdownWrapper label="Product" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="p-1 hover:bg-[rgb(65,79,110)] {productIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={productIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
+			<SidebarDropdownWrapper label="Product" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="cursor-pointer p-1 hover:bg-[rgb(65,79,110)] {productIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={productIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
         {#snippet icon()}
           <GiftBoxOutline class="h-4 w-4 text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
@@ -68,7 +68,7 @@
         <SidebarItem label="Add Stocks" href="/products/stock" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
 
-			<SidebarDropdownWrapper label="Staff" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="p-1 hover:bg-[rgb(65,79,110)] {staffIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={staffIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
+			<SidebarDropdownWrapper label="Staff" svgClass="text-gray-400 transition duration-75 group-hover:text-gray-300 h-2 w-2" btnClass="cursor-pointer p-1 hover:bg-[rgb(65,79,110)] {staffIsOpen? "bg-[rgb(65,79,110)] [&>span]:text-gray-200 [&>svg]:text-gray-200": ""}" bind:isOpen={staffIsOpen} spanClass="text-base text-gray-400 group-hover:text-gray-300 !ms-1 !me-2" ulClass="py-1">
         {#snippet icon()}
           <UserSettingsOutline class="h-4 w-4 text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
