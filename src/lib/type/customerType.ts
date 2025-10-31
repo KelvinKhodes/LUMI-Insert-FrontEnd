@@ -10,6 +10,9 @@ export type getCustomerDataType = {
   customer_contact: string,
   customer_address: string,
   customer_status: string,
-  
 }
+
+export type getCustomerNameDataType = {
+  customer_name: string,
+} 
 

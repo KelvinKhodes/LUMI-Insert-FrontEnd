@@ -1,12 +1,18 @@
 <script lang="ts">
 	import '../../app.css';
-  import { Sidebar, SidebarGroup, SidebarItem, SidebarDropdownWrapper, SidebarButton, uiHelpers, NavBrand, Helper, ButtonGroup, Breadcrumb, BreadcrumbItem, Button } from "flowbite-svelte";
-  import { ChartOutline, CartPlusOutline, UsersGroupOutline, GiftBoxOutline, UserSettingsOutline, MoonOutline, MessagesOutline, ExclamationCircleOutline } from "flowbite-svelte-icons";
+  import { Sidebar, SidebarGroup, SidebarItem, SidebarDropdownWrapper, SidebarButton, uiHelpers, NavBrand, Helper, ButtonGroup, Breadcrumb, BreadcrumbItem, Button, Modal, Label, InputAddon, Alert, Spinner, Input, GradientButton, Select, Dropdown, Search, DropdownGroup, dropdown, spinner } from "flowbite-svelte";
+  import { ChartOutline, CartPlusOutline, UsersGroupOutline, GiftBoxOutline, UserSettingsOutline, MoonOutline, MessagesOutline, ExclamationCircleOutline, InfoCircleSolid, AddColumnAfterOutline, UserAddOutline, UserCircleSolid} from "flowbite-svelte-icons";
   
   let username = "";
   import { page } from "$app/state";
 	import insertLogo from '$lib/assets/LUMI INSERT Logo.png';
 	import logo from '$lib/assets/LUMI Tagline.png';
+	import { redirect } from '@sveltejs/kit';
+	import { addTransactionAPI } from '$lib/api/transactionAPI';
+	import { searchCustomerAPI } from '$lib/api/customerAPI';
+	import type { getCustomerNameDataType } from '$lib/type/customerType';
+	import { goto } from '$app/navigation';
+  
   let trIsOpen = $state(false);
   let productIsOpen = $state(false);
   let customerIsOpen = $state(false);
@@ -17,11 +23,70 @@
   const demoSidebarUi = uiHelpers();
   let isDemoOpen = $state(false);
   const closeDemoSidebar = demoSidebarUi.close;
+
   $effect(() => {
     isDemoOpen = demoSidebarUi.isOpen;
     activeUrl = page.url.pathname;
   });
+  
+
 	let { children } = $props();
+  let openForm = $state(false);
+  let confirm = $state(false);
+  let badPayload = $state(false);
+  let loading = $state(false);
+  let success = $state(false);
+  let failedCreate = $state(false);
+  let dropdownOpen = $state(false);
+  let searchLoad = $state(false);
+  let newTransactionCustomer = $state('');
+  let interval: NodeJS.Timeout;
+  let searchedCustomer: getCustomerNameDataType[] = $state([]);
+  let inputSize: number = $state(300)
+  
+  $effect(() => {
+    if(dropdownOpen){
+      
+      const width = document.getElementById('customer-input')?.offsetWidth;
+      if(width) inputSize = width;
+    }
+  })
+
+  async function searchCustomer(){
+    interval? clearTimeout(interval) : '';
+    searchLoad = true;
+    searchedCustomer = [];
+    interval = setTimeout(async () => {
+      const response = await searchCustomerAPI(newTransactionCustomer);
+      const { data } = await response.json();
+      searchLoad = false;
+      searchedCustomer = data;
+    }, 350)
+  }
+
+  async function productEditingHandler() {
+    loading = true;
+    failedCreate = false;
+
+    if(newTransactionCustomer === ''){
+      badPayload = true;
+      confirm = false;
+      loading = false;
+      return;
+    }
+
+    const response = await addTransactionAPI(newTransactionCustomer);
+    const resJson = await response.json();
+
+    if(response.status === 201 && resJson.data){
+        loading = false;
+        success = true;
+        await goto(`/transactions/${resJson.data.transaction_id}/create`);
+    }
+    loading = false;
+    failedCreate = true;
+}
+
 </script>
 
 <svelte:head>
@@ -46,7 +111,7 @@
         {#snippet icon()}
           <CartPlusOutline class="h-4 w-4 text-x text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
-        <SidebarItem label="New Transaction" href="/transaction/new" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+        <SidebarItem label="New Transaction" onclick={() => openForm = true} aClass="!ms-2 !p-1" spanClass="text-xs"/>
         <SidebarItem label="Transaction Management" href="/transaction/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
         <SidebarItem label="Performance" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
@@ -111,4 +176,68 @@
     {@render children?.()}
   </div>
 </div>
+
+<Modal title="New Transaction" form={false} bind:open={openForm} headerClass="pb-0!" bodyClass="pt-0!">
+    <form onsubmit={() => confirm = true} class="h-full flex-1 flex flex-col gap-3 rounded-2xl">
+            <Label for="new-transaction-customer" class=" block">Customer Name</Label>
+            <ButtonGroup class="w-full" id="customer-input">
+                <InputAddon>
+                <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                </InputAddon>
+                <Input class="cursor-pointer!" id="new-transaction-customer" onclick={() => dropdownOpen = true} bind:value={newTransactionCustomer} disabled/>
+            </ButtonGroup>
+            <Dropdown class="mt-0! w-[{inputSize.toString()}px]!" bind:isOpen={dropdownOpen}>
+              <div class="p-3">
+                <Search size="md" bind:value={newTransactionCustomer} oninput={searchCustomer} />
+              </div>
+              <DropdownGroup class="h-24 overflow-y-auto content-center text-center">
+                {#if searchLoad}
+                  <Spinner class="me-3 text-center" size="12" />
+                {/if}
+                {#if searchedCustomer.length === 0 && !searchLoad}
+                  <span>We can't see any data here!</span>
+                {/if}
+                {#each searchedCustomer as customer}
+                  <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
+                  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                  <li onclick={() => newTransactionCustomer = customer.customer_name} class="rounded-sm p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <span>{customer.customer_name}</span>
+                  </li>
+                {/each}
+              </DropdownGroup>
+            </Dropdown>
+
+            {#if badPayload}
+                <Alert dismissable>
+                    {#snippet icon()}<InfoCircleSolid class="h-5 w-5" />{/snippet}
+                    Bad payload, customer field cannot be empty!
+                </Alert>
+            {/if}
+
+        {#if confirm}
+            <Modal title="Create Confirmation" form bind:open={confirm} headerClass="pb-0!" bodyClass="pt-0!" onclose={() => openForm = false}>
+                {#if loading}
+                    <Spinner class="me-3" size="16" />Editing ...
+                {:else if success}
+                    <UserAddOutline/> Success, {newTransactionCustomer} has been created.
+                {:else if failedCreate} Failed creating.
+                {:else}  
+                    {#snippet icon()}
+                        <AddColumnAfterOutline class="h-6 w-6" />
+                    {/snippet}
+                    <div class="mt-3">
+                        <div class="mb-2 text-sm font-normal">By accepting this, a new transaction will be created!.</div>
+                        <div class="grid grid-cols-2 gap-2">
+                        <Button size="xs" class="w-full" onclick={()=> productEditingHandler()}>Agree</Button>
+                        <Button size="xs" class="w-full" color="dark" onclick={()=> confirm = false}>Cancel</Button>
+                        </div>
+                    </div>  
+                {/if}
+            </Modal>
+        {/if}
+
+        <GradientButton type="submit" shadow color="blue" class={!loading? "cursor-pointer" : "cursor-loading"} disabled={loading}>Edit</GradientButton>
+      </form>
+  </Modal>
   

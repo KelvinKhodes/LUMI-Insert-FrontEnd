@@ -35,3 +35,12 @@ export async function editProductAPI(product: registerProductForm){
     })
   });
 };
+
+export async function searchProductAPI(query: string) {
+  return fetch(`/api/products/search?keyword=${query}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+  })
+}

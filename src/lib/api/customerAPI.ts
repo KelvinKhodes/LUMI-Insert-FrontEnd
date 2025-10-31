@@ -42,3 +42,12 @@ export async function editCustomerAPI(customer: getCustomerDataType){
     })
   });
 };
+
+export async function searchCustomerAPI(query: string) {
+  return fetch(`/api/customers/search?name=${query}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+  })
+}
