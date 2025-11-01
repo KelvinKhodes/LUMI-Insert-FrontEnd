@@ -5,6 +5,14 @@ export type typeProductForm = {
   product_price: number,
 }
 
+export type addedItemsForm = {
+  product_id: string,
+  product_name: string,
+  product_quantity: number,
+  product_price: number,
+  initial_quantity?: number,
+}
+
 export type registerProductForm = {
   product_id: string,
   product_name: string,

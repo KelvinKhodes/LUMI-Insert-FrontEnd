@@ -1,13 +1,12 @@
 <script lang="ts">
 	import '../../app.css';
-  import { Sidebar, SidebarGroup, SidebarItem, SidebarDropdownWrapper, SidebarButton, uiHelpers, NavBrand, Helper, ButtonGroup, Breadcrumb, BreadcrumbItem, Button, Modal, Label, InputAddon, Alert, Spinner, Input, GradientButton, Select, Dropdown, Search, DropdownGroup, dropdown, spinner } from "flowbite-svelte";
+  import { Sidebar, SidebarGroup, SidebarItem, SidebarDropdownWrapper, SidebarButton, uiHelpers, NavBrand, Helper, ButtonGroup, Breadcrumb, BreadcrumbItem, Button, Modal, Label, InputAddon, Alert, Spinner, Input, GradientButton, Dropdown, Search, DropdownGroup } from "flowbite-svelte";
   import { ChartOutline, CartPlusOutline, UsersGroupOutline, GiftBoxOutline, UserSettingsOutline, MoonOutline, MessagesOutline, ExclamationCircleOutline, InfoCircleSolid, AddColumnAfterOutline, UserAddOutline, UserCircleSolid} from "flowbite-svelte-icons";
   
   let username = "";
   import { page } from "$app/state";
 	import insertLogo from '$lib/assets/LUMI INSERT Logo.png';
 	import logo from '$lib/assets/LUMI Tagline.png';
-	import { redirect } from '@sveltejs/kit';
 	import { addTransactionAPI } from '$lib/api/transactionAPI';
 	import { searchCustomerAPI } from '$lib/api/customerAPI';
 	import type { getCustomerNameDataType } from '$lib/type/customerType';
@@ -186,11 +185,11 @@
                 </InputAddon>
                 <Input class="cursor-pointer!" id="new-transaction-customer" onclick={() => dropdownOpen = true} bind:value={newTransactionCustomer} disabled/>
             </ButtonGroup>
-            <Dropdown class="mt-0! w-[{inputSize.toString()}px]!" bind:isOpen={dropdownOpen}>
+            <Dropdown class="mt-0!" bind:isOpen={dropdownOpen}>
               <div class="p-3">
                 <Search size="md" bind:value={newTransactionCustomer} oninput={searchCustomer} />
               </div>
-              <DropdownGroup class="h-24 overflow-y-auto content-center text-center">
+              <DropdownGroup style="width: {inputSize.toString()}px" class="h-24 overflow-y-auto {searchLoad || searchedCustomer.length === 0? "content-center text-center" : ""}">
                 {#if searchLoad}
                   <Spinner class="me-3 text-center" size="12" />
                 {/if}
