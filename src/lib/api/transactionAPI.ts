@@ -54,3 +54,9 @@ export async function editTransactionItemsAPI(item: DetailItems){
     })
   });
 };
+
+export async function getTransactionAPI(){
+  return fetch(`/api/transactions`, {
+    method: 'GET',
+  })
+};

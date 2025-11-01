@@ -111,7 +111,7 @@
           <CartPlusOutline class="h-4 w-4 text-x text-gray-400 transition duration-75 group-hover:text-gray-300 mr-1" />
         {/snippet}
         <SidebarItem label="New Transaction" onclick={() => openForm = true} aClass="!ms-2 !p-1" spanClass="text-xs"/>
-        <SidebarItem label="Transaction Management" href="/transaction/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
+        <SidebarItem label="Transaction Management" href="/transactions/list" aClass="!ms-2 !p-1" spanClass="text-xs"/>
         <SidebarItem label="Performance" aClass="!ms-2 !p-1" spanClass="text-xs"/>
       </SidebarDropdownWrapper>
 

@@ -44,3 +44,9 @@ export async function searchProductAPI(query: string) {
     },
   })
 }
+
+export async function getProductStockAPI(product_id: string){
+  return fetch(`/api/products/${product_id}/stock`, {
+    method: 'GET',
+  });
+};
