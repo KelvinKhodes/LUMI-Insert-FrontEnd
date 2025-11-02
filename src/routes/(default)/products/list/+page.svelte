@@ -28,6 +28,7 @@
      end: 0, 
      total: 0
   });
+
   $inspect(helper).with(console.trace);
 
   onMount(async () => {
@@ -103,7 +104,7 @@ async function productEditingHandler() {
 
 <head><title>Product Management</title></head>
 
-<div class="flex flex-col p-2 h-full justify-between">
+<div class="flex flex-col p-3 h-full justify-between">
   <div>
   <Heading tag="h1" class="font-bold  md:text-xl lg:text-xl text-white">Product Listing</Heading>
   <Table class="w-full table-auto border-collapse bg-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.1)] backdrop-blur-[6.1px]" hoverable={true}>
