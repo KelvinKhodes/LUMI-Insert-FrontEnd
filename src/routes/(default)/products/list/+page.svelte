@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { editCustomerAPI, getCustomerAPI, getInactiveCustomerAPI } from "$lib/api/customerAPI";
 	import { editProductAPI, getProductAPI } from "$lib/api/productAPI";
-	import type { getCustomerDataType } from "$lib/type/customerType";
-	import type { registerProductForm, typeProductForm } from "$lib/type/productType";
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder } from "flowbite-svelte";
-	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, UserSolid, EyeSlashSolid, EyeSolid, EyeOutline } from "flowbite-svelte-icons";
+	import type { registerProductForm } from "$lib/type/productType";
+  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, ListPlaceholder, Pagination } from "flowbite-svelte";
+	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";
   
   let productList: registerProductForm[] = $state([]);
@@ -25,10 +23,16 @@
     product_price: '',
   })
 
+  let helper = $state({
+     start: 0, 
+     end: 0, 
+     total: 0
+  });
 
+  $inspect(helper).with(console.trace);
 
   onMount(async () => {
-    activeFetchHandler();
+   await nextPageHandler();
   });
 
 async function editBtn(product: registerProductForm) {
@@ -36,13 +40,37 @@ async function editBtn(product: registerProductForm) {
   openForm = true;
 }
 
-async function activeFetchHandler() {
+async function nextPageHandler(limit: number = 5) {
   inactive = false;
-  const response = await getProductAPI();
-    fetching = false;
+  if(helper.end === helper.total && helper.total) return;
+  const response = await getProductAPI(productList.at(-1)?.product_id, limit);
+  fetching = false;
+
     if(response.status === 200){
       const { data } = await response.json();
-      productList = data;
+      productList = data.product_data;
+      helper.start = helper.end + 1;
+      helper.end = helper.end + data.product_data.length;
+      helper.total = data.total_rows
+      return;
+    }
+    
+    failed = true;
+    return;
+}
+
+async function previousPageHandler(limit: number = -5) {
+  inactive = false;
+  if(helper.start === 1) return;
+  const response = await getProductAPI(productList.at(0)?.product_id, limit);
+  fetching = false;
+
+    if(response.status === 200){
+      const { data } = await response.json();
+      productList = data.product_data;
+      helper.end = helper.start - 1;
+      helper.start = helper.end - 4;
+      helper.total = data.total_rows
       return;
     }
     
@@ -52,12 +80,14 @@ async function activeFetchHandler() {
 
 async function productEditingHandler() {
     loading = true;
+
     if(editForm.product_quantity === '' || editForm.product_quantity === ''){
       badPayload = true;
       confirm = false;
       loading = false;
       return;
     }
+
     const response = await editProductAPI(editForm);
     const resJson = await response.json();
 
@@ -74,7 +104,8 @@ async function productEditingHandler() {
 
 <head><title>Product Management</title></head>
 
-<div class="flex flex-col p-2">
+<div class="flex flex-col p-3 h-full justify-between">
+  <div>
   <Heading tag="h1" class="font-bold  md:text-xl lg:text-xl text-white">Product Listing</Heading>
   <Table class="w-full table-auto border-collapse bg-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.1)] backdrop-blur-[6.1px]" hoverable={true}>
     <TableHead class=" bg-transparent">
@@ -109,7 +140,17 @@ async function productEditingHandler() {
       {/each}
     </TableBody>
   </Table>
-
+  </div>
+  <div class="text-sm text-gray-700 dark:text-gray-400 text-center">
+      Showing <span class="font-semibold text-gray-900 dark:text-white">{helper.start}</span>
+      to
+      <span class="font-semibold text-gray-900 dark:text-white">{helper.end}</span>
+      of
+      <span class="font-semibold text-gray-900 dark:text-white">{helper.total}</span>
+      Entries
+      <Pagination class="" table previous={previousPageHandler} next={nextPageHandler} />
+  </div>
+    
   {#if failed}
     <span class=" text-center">We can't get the data, try to refresh!</span>  
   {/if}

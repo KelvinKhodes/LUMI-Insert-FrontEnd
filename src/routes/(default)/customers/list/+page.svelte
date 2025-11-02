@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { editCustomerAPI, getCustomerAPI, getInactiveCustomerAPI } from "$lib/api/customerAPI";
 	import type { getCustomerDataType } from "$lib/type/customerType";
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder } from "flowbite-svelte";
+  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder, Pagination } from "flowbite-svelte";
 	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, UserSolid, EyeSlashSolid, EyeSolid, EyeOutline } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";
   
@@ -24,13 +24,19 @@
     customer_status: '',
   })
 
-let custStatus = [
-  { value: "ACTIVE", name: "ACTIVE" },
-  { value: "SUSPENDED", name: "INACTIVE" },
-]
+  let custStatus = [
+    { value: "ACTIVE", name: "ACTIVE" },
+    { value: "SUSPENDED", name: "INACTIVE" },
+  ]
+
+  let helper = $state({
+      start: 0, 
+      end: 0, 
+      total: 0
+  });
 
   onMount(async () => {
-    activeFetchHandler();
+    nextPageHandler();
   });
 
 async function editBtn(customer: getCustomerDataType) {
@@ -38,13 +44,26 @@ async function editBtn(customer: getCustomerDataType) {
   openForm = true;
 }
 
-async function activeFetchHandler() {
-  inactive = false;
-  const response = await getCustomerAPI();
-    fetching = false;
+async function inactiveHandler(){
+  inactive = !inactive;
+  helper.start = 0;
+  helper.end = 0;
+  helper.total = 0;
+  customerList = [];
+  await nextPageHandler();
+}
+
+async function nextPageHandler(limit: number = 5) {
+  if(helper.end === helper.total && helper.total) return;
+  const response = !inactive? await getCustomerAPI(customerList.at(-1)?.customer_id, limit) : await getInactiveCustomerAPI(customerList.at(-1)?.customer_id, limit);
+  fetching = false;
+
     if(response.status === 200){
       const { data } = await response.json();
-      customerList = data;
+      customerList = data.customer_data;
+      helper.start = helper.end + 1;
+      helper.end = helper.end + data.customer_data.length;
+      helper.total = data.total_rows
       return;
     }
     
@@ -52,13 +71,17 @@ async function activeFetchHandler() {
     return;
 }
 
-async function inactiveFetchHandler() {
-  inactive = true;
-  const response = await getInactiveCustomerAPI();
-    fetching = false;
+async function previousPageHandler(limit: number = -5) {
+  if(helper.start === 1) return;
+  const response = !inactive? await getCustomerAPI(customerList.at(0)?.customer_id, limit) : await getInactiveCustomerAPI(customerList.at(0)?.customer_id, limit);
+  fetching = false;
+
     if(response.status === 200){
       const { data } = await response.json();
-      customerList = data;
+      customerList = data.customer_data;
+      helper.end = helper.start - 1;
+      helper.start = helper.end - 4;
+      helper.total = data.total_rows
       return;
     }
     
@@ -90,9 +113,10 @@ async function customerEditingHandler() {
 
 <head><title>Customer Management</title></head>
 
-<div class="flex flex-col p-2">
+<div class="flex flex-col p-2 h-full justify-between">
+  <div>
   <Heading tag="h1" class="font-bold  md:text-xl lg:text-xl text-white">Customer Listing</Heading>
-  <Button class="bg-gray-400 border-0 rounded-b-none! shadow-none {inactive? "bg-red-700/80" : ""}" onclick={()=> !inactive? inactiveFetchHandler() : activeFetchHandler()}>
+  <Button class="bg-gray-400 border-0 rounded-b-none! shadow-none {inactive? "bg-red-700/80" : ""}" onclick={inactiveHandler}>
     {#if !inactive}
       <EyeSlashSolid class="w-3 h-3"/>
     {:else}<EyeSolid class="w-3 h-3"/>
@@ -140,7 +164,16 @@ async function customerEditingHandler() {
       {/each}
     </TableBody>
   </Table>
-
+  </div>
+  <div class="text-sm text-gray-700 dark:text-gray-400 text-center">
+      Showing <span class="font-semibold text-gray-900 dark:text-white">{helper.start}</span>
+      to
+      <span class="font-semibold text-gray-900 dark:text-white">{helper.end}</span>
+      of
+      <span class="font-semibold text-gray-900 dark:text-white">{helper.total}</span>
+      Entries
+      <Pagination table previous={previousPageHandler} next={nextPageHandler} />
+  </div>
   {#if failed}
     <span class=" text-center">We can't get the data, try to refresh!</span>  
   {/if}

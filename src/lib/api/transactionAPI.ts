@@ -55,8 +55,8 @@ export async function editTransactionItemsAPI(item: DetailItems){
   });
 };
 
-export async function getTransactionAPI(){
-  return fetch(`/api/transactions`, {
+export async function getTransactionAPI(id: string = 'first', limit: number){
+  return fetch(`/api/transactions?last=${id}&limit=${limit}`, {
     method: 'GET',
   })
 };

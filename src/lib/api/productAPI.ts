@@ -16,8 +16,8 @@ export async function registerProductAPI(productRegister: registerProductForm){
   });
 };
 
-export async function getProductAPI(){
-  return fetch(`/api/products`, {
+export async function getProductAPI(id: string = 'first', limit: number){
+  return fetch(`/api/products?last=${id}&limit=${limit}`, {
     method: 'GET',
   });
 };
