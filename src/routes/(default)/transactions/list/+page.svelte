@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getTransactionAPI } from "$lib/api/transactionAPI";
 	import type { TransactionRegisteredPayload } from "$lib/type/transactionType";
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder } from "flowbite-svelte";
-	import { EyeOutline } from "flowbite-svelte-icons";
+  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, ListPlaceholder } from "flowbite-svelte";
+	import { EyeOutline, PenOutline } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";
   
   let transactionList: TransactionRegisteredPayload[] = $state([]);
@@ -59,8 +59,11 @@ async function activeFetchHandler() {
         <TableBodyCell>{transaction.transaction_date}</TableBodyCell>
         <TableBodyCell>{transaction.transaction_total}</TableBodyCell>
         <TableBodyCell>
-          <Button pill={true} outline={false} class="p-2! bg-transparent!" href="/transactions/{transaction.transaction_id}/edit" size="xl">
+          <Button pill={true} outline={false} class="p-2! bg-transparent!" href="/transactions/{transaction.transaction_id}/view" size="xl">
             <EyeOutline class="w-3 h-3 text-blue-500 cursor-pointer"/>
+          </Button>
+          <Button pill={true} outline={false} class="p-2! bg-transparent!" href="/transactions/{transaction.transaction_id}/edit" size="xl">
+            <PenOutline class="w-3 h-3 text-blue-500 cursor-pointer"/>
           </Button>
         </TableBodyCell>
       </TableBodyRow>
