@@ -15,14 +15,14 @@ export async function registerCustomerAPI(customerRegister: registerCustomerForm
   })
 }
 
-export async function getCustomerAPI(){
-  return fetch(`/api/customers`, {
+export async function getCustomerAPI(id: string = 'first', limit: number){
+  return fetch(`/api/customers?last=${id}&limit=${limit}`, {
     method: 'GET',
   });
 };
 
-export async function getInactiveCustomerAPI(){
-  return fetch(`/api/customers/inactive`, {
+export async function getInactiveCustomerAPI(id: string = 'first', limit: number){
+  return fetch(`/api/customers/inactive?last=${id}&limit=${limit}`, {
     method: 'GET',
   });
 };
