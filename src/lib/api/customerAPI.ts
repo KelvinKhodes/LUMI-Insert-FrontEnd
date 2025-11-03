@@ -1,4 +1,34 @@
-import type { getCustomerDataType, registerCustomerForm } from "$lib/type/customerType";
+import type { registerCustomerForm, updateCustomer } from "$lib/type/customerType";
+
+export async function getCustomerAPI(id: string = 'first', limit: number){
+  return fetch(`/api/customers?last=${id}&limit=${limit}`, {
+    method: 'GET',
+  });
+};
+
+export async function getInactiveCustomerAPI(id: string = 'first', limit: number){
+  return fetch(`/api/customers/inactive?last=${id}&limit=${limit}`, {
+    method: 'GET',
+  });
+};
+
+export async function searchCustomerAPI(query: string) {
+  return fetch(`/api/customers/search?name=${query}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+  })
+}
+
+export async function getCustomerDetailAPI(id: string) {
+  return fetch(`/api/customers/${id}/detail`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+  })
+}
 
 export async function registerCustomerAPI(customerRegister: registerCustomerForm){
   return fetch(`/api/customers`, {
@@ -15,19 +45,8 @@ export async function registerCustomerAPI(customerRegister: registerCustomerForm
   })
 }
 
-export async function getCustomerAPI(id: string = 'first', limit: number){
-  return fetch(`/api/customers?last=${id}&limit=${limit}`, {
-    method: 'GET',
-  });
-};
 
-export async function getInactiveCustomerAPI(id: string = 'first', limit: number){
-  return fetch(`/api/customers/inactive?last=${id}&limit=${limit}`, {
-    method: 'GET',
-  });
-};
-
-export async function editCustomerAPI(customer: getCustomerDataType){
+export async function editCustomerAPI(customer: updateCustomer){
   return fetch(`/api/customers/${customer.customer_id}`, {
     method: 'PUT',
     headers: {
@@ -38,16 +57,10 @@ export async function editCustomerAPI(customer: getCustomerDataType){
       customer_name: customer.customer_name,
       customer_contact: customer.customer_contact,
       customer_address: customer.customer_address,
-      customer_status: customer.customer_status
+      customer_status: customer.customer_status,
+      customer_lat: customer.customer_lat,
+      customer_lng: customer.customer_lng
     })
   });
 };
 
-export async function searchCustomerAPI(query: string) {
-  return fetch(`/api/customers/search?name=${query}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-  })
-}

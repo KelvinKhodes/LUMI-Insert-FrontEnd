@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { editCustomerAPI, getCustomerAPI, getInactiveCustomerAPI } from "$lib/api/customerAPI";
-	import type { getCustomerDataType } from "$lib/type/customerType";
+	import type { getCustomerDataType, updateCustomer } from "$lib/type/customerType";
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Heading, Button, Modal, ButtonGroup, InputAddon, Label, Input, Alert, Spinner, GradientButton, Select, ListPlaceholder, Pagination } from "flowbite-svelte";
 	import { UserEditOutline, AddColumnAfterOutline, UserCircleSolid, UserAddOutline, InfoCircleSolid, UserSolid, EyeSlashSolid, EyeSolid, EyeOutline } from "flowbite-svelte-icons";
 	import { onMount } from "svelte";
@@ -16,12 +16,14 @@
   let fetching = $state(true);
   let inactive = $state(false);
 
-  let editForm: getCustomerDataType = $state({
+  let editForm: updateCustomer = $state({
     customer_id: '',
     customer_name: '',
     customer_contact: '',
     customer_address: '',
     customer_status: '',
+    customer_lat: 0,
+    customer_lng: 0
   })
 
   let custStatus = [
@@ -39,7 +41,7 @@
     nextPageHandler();
   });
 
-async function editBtn(customer: getCustomerDataType) {
+async function editBtn(customer: updateCustomer) {
   editForm = customer;
   openForm = true;
 }
@@ -180,37 +182,59 @@ async function customerEditingHandler() {
 </div>
   <Modal title="Customer Information Edit" form={false} bind:open={openForm} headerClass="pb-0!" bodyClass="pt-0!">
     <form onsubmit={() => confirm = true} class="h-full flex-1 flex flex-col gap-3 rounded-2xl">
-            <Label for="new-staff-username" class=" block">Customer Name</Label>
+            <Label for="new-name" class=" block">Customer Name</Label>
             <ButtonGroup class="w-full">
                 <InputAddon>
                 <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </InputAddon>
-                <Input id="new-staff-username" bind:value={editForm.customer_name}/>
+                <Input id="new-name" bind:value={editForm.customer_name}/>
             </ButtonGroup>
 
-            <Label for="new-staff-fullname" class=" block">Customer Contact</Label>
+            <Label for="new-contact" class=" block">Customer Contact</Label>
             <ButtonGroup class="w-full">
                 <InputAddon>
                 <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </InputAddon>
-                <Input id="new-staff-fullname" bind:value={editForm.customer_contact}/>
+                <Input id="new-contact" bind:value={editForm.customer_contact}/>
             </ButtonGroup>
 
-            <Label for="new-staff-fullname" class=" block">Customer Address</Label>
+            <Label for="new-address" class=" block">Customer Address</Label>
             <ButtonGroup class="w-full">
                 <InputAddon>
                 <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </InputAddon>
-                <Input id="new-staff-fullname" bind:value={editForm.customer_address}/>
+                <Input id="new-address" bind:value={editForm.customer_address}/>
             </ButtonGroup>
 
-            <Label for="new-staff-username" class=" block">Customer Status</Label>
+            <Label for="new-status" class=" block">Customer Status</Label>
             <ButtonGroup class="w-full">
                 <InputAddon>
                 <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </InputAddon>
-                <Select items={custStatus} bind:value={editForm.customer_status} />
+                <Select id="new-status" items={custStatus} bind:value={editForm.customer_status} />
             </ButtonGroup>
+
+            <div class="flex">
+              <div>
+                <Label for="new-latitude" class=" block">Customer Latitude</Label>
+                <ButtonGroup class="w-full">
+                  <InputAddon>
+                    <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  </InputAddon>
+                  <Input id="new-latitude" type="number" step="any" bind:value={editForm.customer_lat} />
+                </ButtonGroup>
+              </div>
+
+              <div>
+                <Label for="new-longitude" class=" block">Customer Longitude</Label>
+                <ButtonGroup class="w-full">
+                  <InputAddon>
+                    <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  </InputAddon>
+                  <Input id="new-longitude" type="number" step="any" bind:value={editForm.customer_lng} />
+                </ButtonGroup>
+              </div>
+            </div>
 
             {#if badPayload}
                 <Alert dismissable>
